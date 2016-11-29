@@ -1,0 +1,41 @@
+﻿body {
+    background-image:url('../img/background.png');
+    background-size:cover;  
+}
+#formHead{
+    background-color:#3072cf;
+    color:white;
+    min-height:30px;
+}
+#formBody{
+    background-color:#aeaeae;
+}
+#AuthenticationForm{
+    margin-top:200px;
+    height:250px;
+     font-size:16pt;
+}
+.P{
+    margin-top:20px;
+    font-size:14pt;
+    padding-bottom:20px;
+    padding-left:0;
+    padding-right:5px;
+}
+.btn-success{
+    margin-top:20px; 
+}
+#Error{
+    margin-top:35px; 
+    margin-left:10px;
+    display:none;
+    color:red;
+}
+#registration{
+    font-size:12pt;
+   margin-top:-10px;
+}
+#AddUser{
+    display:none;
+}
+

@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "UsAuth";
+    Layout = null;
+}
+
+
+<html>
+<head>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+
+    <link href="~/Content/StyleSheetHomeIndex.css" rel="stylesheet" />
+    <style>
+        .taskConteiner {
+            padding:0;
+        }
+        .DeletePr {
+            padding: 2px;
+            margin-top: -20px;
+        }
+        .tasks{
+            background-color:white;
+            font-size:14pt;
+            padding-top:10px;
+            padding-bottom:10px;
+            padding-right:0;
+        }
+        .Delete{
+          padding:2px;
+        }
+        .Edit{
+            padding:2px;
+        }
+        .Perem {
+            height: 25px;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        $(document).ready(function () {
+            var userId;
+          
+                function AddProject(namePr) {
+                    $("#cont").append("<div class='projConteiner col-lg-12'> \
+                <div class=" + namePr + ">\
+                <div class='NameProject col-lg-6 col-lg-offset-3'>" + namePr + "\
+                <img class='DeletePr btn col-lg-offset-11' src='../img/delete.png'/>\
+                </div>\
+                <div class='AddTask col-lg-6 col-lg-offset-3'>\
+                <img src='../img/Plus.jpg' class='btnADD col-lg-1 btn'/>\
+                <input  class='col-lg-9' type='text' />\
+                <button class='btnADD btn btn-success'>ADD TASK</button> </div></div> \
+                <div class='taskConteiner col-lg-12'></div></div>");
+                    }                            
+            
+            function parseUrl(url) {                  
+                var urlAux = url.toString().split('=');
+                var id = urlAux[1];
+                userId=id;
+                return id;
+            };//
+            
+            function LoadProjects() {            
+               // var id = parseUrl(window.location);
+                userId = $.cookie('cookie_UserID');
+               
+                $.cookie('cookie_UserID', null);
+            
+                $.ajax({
+                    url: "http://localhost:61212/Project?act=ShowAll&id=" + userId, success: function (result) {
+                        var arrayProject = jQuery.parseJSON(result);
+                    
+                        if (arrayProject.length != 0) {
+                            for (var i = 0; i < arrayProject.length; i++) {
+                                AddProject((arrayProject[i].Name));
+                                AddTasks(arrayProject[i].Name);
+                            }
+                        }
+                    }
+                });
+            };
+
+            function AddTasks(idProj) {   
+                $.ajax({
+                    url: "http://localhost:61212/Task?act=ShowAll&idProj=" + idProj, success: function (result) {
+                        var array = jQuery.parseJSON(result);
+                        var status;
+                        for (var i = 0; i < array.length; i++) {
+                            
+                            if (array[i].Status)
+                            {
+                                status = "../img/krestik.png";
+                            } else {
+                                status = "../img/correcto.png";
+                            }                        
+
+                            $(("." + array[i].Project.Name)).siblings('div.taskConteiner').append(" <div class='tasks col-lg-6 col-lg-offset-3'>\
+                       <img class='Img_calendar col-lg-1 btn' src='../img/calendar.png'/>\
+                       <input class='C col-lg-9' type='text' value='" + array[i].Name + "'  disabled/>\
+                       <img class='Perem btn' src='" + status + "'/>\
+                       <img class='Edit btn' src='../img/edit.png'/>\
+                       <img class='Delete btn' src='../img/delete.png'/></div></div>");
+                           
+                        }
+                        return array;
+                    }
+                });
+                
+            };
+
+            LoadProjects();                    
+            //добавление нового проекта по нажатию кнопки
+            $("#Add_Project").click(function () { 
+                $("#cont").append("<div class='Projectt'>\
+            <div class='NameProject col-lg-6 col-lg-offset-3'>\
+            <input class='Inp_text col-lg-9' type='text' />\
+            <button id='ADD' class='btn btn-success'>ADD</button> </div>\
+            <div class='AddTask col-lg-6 col-lg-offset-3'>\
+            <img src='../img/Plus.jpg' class='btnADD col-lg-1 btn'/>\
+            <input  class='col-lg-9' type='text' />\
+            <button class='btnADD btn btn-success'>ADD TASK</button> </div> \
+           </div>");
+             
+                $(".Inp_text").focus();
+                $(".Inp_text").focusout(function () {
+                    addNameProject();
+                });
+            });
+            //ввод названия прэкта в дополнительном поле
+            function addNameProject() {
+                if ($(".Inp_text").val().length == 0) {
+                    $(".Projectt").remove();
+                }
+                else {
+                    var text = $(".Inp_text").val();
+                    $(".Projectt").remove();
+                    $("#cont").append("<div class='projConteiner col-lg-12'>\
+            <div class=" + text + ">  <div class='NameProject col-lg-6 col-lg-offset-3'> " + text + "\
+            <img class='DeletePr btn col-lg-offset-11' src='../img/delete.png'/></div>\
+            <div class='AddTask col-lg-6 col-lg-offset-3'>\
+            <img src='../img/Plus.jpg' class='btnADD col-lg-1 btn'/>\
+            <input  class='col-lg-9' type='text' />\
+            <button class='btnADD btn btn-success'>ADD TASK</button> </div> </div>\
+            <div class='taskConteiner col-lg-12'></div></div>");
+                    
+
+                    $.ajax({
+                        url: "http://localhost:61212/Project?act=AddProject&name=" + text + "&user=" + userId
+                    });
+
+                }
+            };
+            //ввод названия прэкта
+            $("#ADD").click(function () {
+                addNameProject();
+            });
+
+            //Delete Project
+            $(document).on('click', '.DeletePr', function () {
+                var project = $(this).parent().text();
+                var strTasks="";
+                $(this).parent().parent().siblings(".taskConteiner").children().each(function (i, elem) {
+                    strTasks+=$(elem).find("input").val()+"^";
+                })              
+                $(this).parent().parent().siblings(".taskConteiner").remove();
+                    
+                $.ajax({
+                    url: "http://localhost:61212/Project?act=RemoveProject&name=" + project + "&idUs=" + userId + "&tasks=" + strTasks
+                });
+
+                $(this).parent().parent().remove();
+            });
+
+           
+            //событие ADD TACK.click()
+            $(document).on('click', '.btnADD', function () {                             
+                if ($(this).siblings("input").val().length != 0) {
+                    $(this).parent().parent().siblings('div.taskConteiner').append(" <div class='tasks col-lg-6 col-lg-offset-3'>\
+                      <img class='Img_calendar col-lg-1 btn' src='../img/calendar.png'/>\
+                      <input class='C col-lg-9' type='text' value='" + $(this).siblings("input").val() + "'  disabled/>\
+                       <img class='Perem btn'src='../img/krestik.png'/>\
+                       <img class='Edit btn' src='../img/edit.png'/>\
+                       <img class='Delete btn' src='../img/delete.png'/></div></div>");
+                                                                         
+
+                    //запрос добавления задачи в БД 
+                    $.ajax({
+                        url: "http://localhost:61212/Task?act=AddTask&nameTask=" + $(this).siblings("input").val() + "&date=19.11.2016&nameProject=" + $(this).parent().siblings("div.NameProject").text() });
+                   
+                    $(this).siblings("input").val("");
+                }                            
+            });
+
+            //Status
+            $(document).on('click', '.Perem', function () {          
+               // alert($(this).parent().siblings("div").children(".NameProject").text());
+                if ($(this).attr('src') == '../img/krestik.png') {
+                    $(this).attr('src', '../img/correcto.png');
+                   
+                    $.ajax({
+                        url: "http://localhost:61212/Task?act=RenameStatus&nameTask=" + $(this).siblings("input").val() + "&nameProject=" + $(this).parent().parent().siblings("div").children(".NameProject").text()
+                    });
+
+                } else {
+                    $(this).attr('src', '../img/krestik.png');
+                    $.ajax({
+                        url: "http://localhost:61212/Task?act=RenameStatus&nameTask=" + $(this).siblings("input").val() + "&nameProject=" + $(this).parent().parent().siblings("div").children(".NameProject").text()
+                    });
+                }
+            });
+
+
+            //delete task
+            $(document).on('click', '.Delete', function () {
+                var nameTask = $(this).siblings("input").val();
+                var nameProject = $(this).parent().parent().siblings("div").children(".NameProject").text();
+                DeleteTask(nameTask, nameProject);
+              
+                $(this).parent().remove();
+            });
+
+            function DeleteTask(nameTask, nameProject)
+            {
+                $.ajax({
+                    url: "http://localhost:61212/Task?act=RemoveTask&nameTask=" + nameTask + "&nameProject=" + nameProject   });
+            }
+
+            var text;
+            //Edit task   
+            $(document).on('click', '.Edit', function () {
+                if ( $(this).attr('src')== '../img/edit.png'){
+                    $(this).siblings("input").attr('disabled', false);
+                    $(this).attr('src', '../img/save.png');
+                    text = $(this).siblings("input").val();
+                } else {
+                    $(this).siblings("input").attr('disabled', true);
+                    $(this).attr('src', '../img/edit.png');
+                    $.ajax({
+                        url: "http://localhost:61212/Task?act=RenameTask&nameTask=" + text + "&nameProject=" + $(this).parent().parent().siblings("div").children(".NameProject").text() + "&newTask=" + $(this).siblings("input").val()
+                    });
+                }              
+            });
+           
+            $(document).on('mousedown', '.taskConteiner', function () {
+                
+                $(this).sortable();
+               
+            })
+ 
+        });
+
+    </script>
+
+    <h2 id="sp">SIMPLE TODO LISTS</h2>
+    <br />
+    <br />
+    <div id="cont" class="col-lg-12">
+    </div>
+    <br />
+    <br />
+    <br />
+    <button id="Add_Project" class="btn btn-success col-lg-2 col-lg-offset-5">ADD PROJECT</button>
+    <div id="container">
+    </div>
+
+</body>
+</html>

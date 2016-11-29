@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+    Layout = null;
+}
+
+
+<html>
+
+<head>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@   
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+    <script src="~/Scripts/Gruntfile.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link href="~/Content/StyleSheetAuthentication.css" rel="stylesheet" />
+</head>
+<body>
+    <script>
+        $(document).ready(function () {
+                  
+            $("#Ok").click(function () {
+                if ($("#formHead").text() == "Registration") {
+                    $.ajax({
+                        url: "http://localhost:61212/User?act=AddUser&Login=" + $('.login').val() + "&Password=" + $('.Password').val() + ""
+                    });
+                    alert("Регистрация прошла успешно!");
+                    location.replace(" http://localhost:61212/Home/Index");
+                }
+                else {
+                    $.ajax({
+                        url: " http://localhost:61212/User?act=Validator&Login=" + $('.login').val() + "&Password=" + $('.Password').val() + "", success: function (result) {
+                            var array = jQuery.parseJSON(result);                           
+                            //
+                            $.cookie('cookie_UserID', array);
+                         
+                            //
+                            if (array == "null") {
+                                $("#Error").show();
+                                $(".br").hide();
+                            }
+                            else {
+                              // location.replace(" http://localhost:61212/Home/UsAuth?d="+array);//--------------
+                               location.replace(" http://localhost:61212/Home/UsAuth");
+                            }
+                        }
+                    });
+                }
+            })
+            
+            $(".login").focusout(function () {
+                if ($("#formHead").text() == "Registration") {
+                    $.ajax({
+                        url: " http://localhost:61212/User?act=ValidatorLogin&Login=" + $('.login').val() +"", success: function (result) {
+                            var arrayVar = jQuery.parseJSON(result);
+                            if (arrayVar == true) {
+                                $("#ErrorLog").show();
+                                $("#ico").attr('src', '../img/close.png');
+                                $("#Ok").attr('disabled', true);
+                            }
+                            else if (arrayVar == false) {
+                                $("#ico").show();
+                                $("#ico").attr('src', '../img/sm.png');
+                                $("#Ok").attr('disabled', false);
+                               
+                            }
+                        }
+                    });
+                }
+            })
+
+            $(".login").focusin(function () {
+                $("#Error").hide();
+                $(".br").show();
+                $("#ErrorLog").hide();
+                $("#ico").hide();
+            })
+
+            $(".Password").focusin(function () {
+                $("#Error").hide();
+                $(".br").show();
+
+              
+            })
+                     
+            $("#registration").click(function () {
+                $("#formHead").text("Registration");
+                $("#AddUser").show();
+                $("#Ok").attr('disabled', true);
+                $("#registration").hide();
+            })
+
+        });
+    </script>
+    <br />
+    <div id="AuthenticationForm" class="col-lg-12">
+        <div id="formHead" class="col-lg-6 col-lg-offset-3">Authentication</div>
+        <div id="formBody" class="col-lg-6 col-lg-offset-3">
+            <div id="AddUser"><h3>Введите логин и пароль:</h3></div>
+            <div class="P col-lg-12">
+                <div class="col-lg-2">Login</div>
+                <input name="Login" class="login col-lg-6" style="margin-left:5px;" type="text" />
+                <div style="padding:0;" class="col-lg-3"><img style="height:20px;margin-top:5px;" id="ico"/><h5 id="ErrorLog"style="color:red;display:none;">Этот логин занят!</h5></div>
+            </div>
+            <div class="P col-lg-12">
+                <div class="col-lg-2">Password</div>
+                <input name="Password" class="Password col-lg-6" style="margin-left:5px;" type="password" />
+            </div>  
+            <button id="Ok" class="btn-success col-lg-4">OK</button>
+           <div id="Error" ><h3 style="margin-top:35px; ">*Неправелиный логин или пароль!</h3></div>
+            <br class="br"/>
+            <br class="br"/>
+            <br/>
+            <div id="registration"class="col-lg-2"><a href="#">Registration</a></div>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+

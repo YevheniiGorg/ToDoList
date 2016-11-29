@@ -1,0 +1,63 @@
+﻿
+body {
+    background-image:url('../img/background.png');
+    background-size:cover;
+   
+     width:100%;
+}
+#sp{
+    text-align:center;
+    font-weight: 700;
+    margin-top:50px;
+}
+.Project{
+    /*display:none;*/
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.NameProject {
+     margin-top:30px;
+    background-color: #1781db;
+    color: white;
+    font-size:14pt;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+.AddTask{
+    background-color:#8e8484;
+     padding-top:10px;
+    padding-bottom:10px;
+
+}
+input{
+    padding-left:0;
+    padding-right:0;
+    height:35px;
+    font-size:14px;
+}
+.Plus{
+    height:35px;
+    padding-left:5px;
+    padding-right:5px;
+    padding-top:0;
+    padding-bottom:0;
+}
+/*.ContentTask{
+    background-color:white;
+     font-size:14pt;
+    padding-top:10px;
+    padding-bottom:10px;
+}*/
+.Img_calendar{
+     height:35px;
+    padding-left:5px;
+    padding-right:5px;
+    padding-top:0;
+    padding-bottom:0;
+}
+#Add_Project{
+     margin-top:20px;
+ }
+.Perem{
+    height:10px;
+}
