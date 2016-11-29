@@ -12,4 +12,4 @@ Use SQL tables:
 ★ tasks (id, name, status,date, project_id)
 ★ projects (id, name, user_id)
 ★ users (id, login, password)
-![alt](ToDoList/User.png)
+![alt](User.png)
