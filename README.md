@@ -14,5 +14,5 @@ Use SQL tables:
 ★ users (id, login, password)
 
 
-![alt](User.png)
-![alt](ToDo.png)
+![alt](Us.png)
+![alt](ToDoList.png)
